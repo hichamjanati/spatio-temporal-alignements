@@ -24,18 +24,16 @@ def sta_distances(x, y, metric, beta=0.01, epsilon=0.01,
 
     Parameters:
     -----------
-
-    x: tensor (n_timestamps_1, dimension_1, dimension_2, ...)
-    y: tensor (n_time_series, n_timestamps_2, dimension_1, dimension_2, ...)
-    metric: tensor (dimension, dimension)
+    x: tensor, shape (n_timestamps_1, dimension_1, dimension_2, ...)
+    y: tensor, shape (n_time_series, n_timestamps_2, dimension_1, dimension_2, ...)
+    metric: tensor, shape (dimension, dimension)
         OT ground kernel
     beta: float
         hyperparameter of SoftDTW
 
     Returns:
     --------
-
-    sta: float or array (n_time_series)
+    sta: float or array (n_time_series,)
         distances between x and y
     """
     betas = np.asarray(beta)

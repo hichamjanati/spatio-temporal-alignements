@@ -38,16 +38,16 @@ def groundmetric_img(width, height=None, p=2, normed=False):
 
     Parameters
     ----------
-
     width, height : int,
         shape of images
     p: int, optional (default 2)
         Power to raise the pairwise distance metrix. Quadratic by default.
-    normed: boolean (default True)
+    normed: bool (default True)
         If True, the matrix is divided by its median.
+
     Returns
     -------
-    M: 2D array (width, height).
+    M: ndarray, shape (width, height)
     """
     if height is None:
         height = width
@@ -64,16 +64,18 @@ def groundmetric2d(width, height=None, p=1, normed=False):
 
     Parameters
     ----------
-    n_features: int > 0.
-    p: int > 0.
+    width: int
+        The width.
+    height: int | None
+        The height. If None, then it defaults to width.
+    p: int
         Power to raise the pairwise distance metrix. Quadratic by default.
     normed: boolean (default True)
         If True, the matrix is divided by its median.
 
     Returns
     -------
-    M: 2D array (n_features, n_features).
-
+    M: ndarray, shape (n_features, n_features)
     """
     if height is None:
         height = width
@@ -88,13 +90,19 @@ def groundmetric2d(width, height=None, p=1, normed=False):
 
 
 def compute_gamma(tau, M):
-    """Compute the sufficient KL weight for a full mass minimum."""
+    """Compute the sufficient KL weight for a full mass minimum.
+
+    XXX add docstrings
+    """
     xp = get_module(M)
     return max(0., - M.max() / (2 * xp.log(tau)))
 
 
 def show_ts(X, axes=None, title="", cmap=None, show_time=False,
             normalize=True):
+    """
+    XXX add docstrings
+    """
     T, p, p = X.shape
     vmin = X.min()
     vmax = X.max()
@@ -110,7 +118,10 @@ def show_ts(X, axes=None, title="", cmap=None, show_time=False,
 
 
 def prox_simplex_all(x):
-    """Projection on the simplex."""
+    """Projection on the simplex.
+
+    XXX add docstrings
+    """
     shape = x.shape
     if x.ndimension() == 2:
         x = x.reshape(1, -1)
@@ -148,6 +159,9 @@ def kl(p, q):
     q: array-like.
         must be positive, same shape and dimension of `p`.
 
+    Returns
+    -------
+    XXX
     """
     xp = get_module(p)
     logpq = xp.zeros_like(p)
