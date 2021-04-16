@@ -1,7 +1,8 @@
 import torch
 from scipy.linalg import toeplitz
 
-from sdtw.distance import SquaredEuclidean
+#from sdtw.distance import SquaredEuclidean
+from sdtw_div.numba_ops import squared_euclidean_cost
 import gc
 
 
@@ -60,9 +61,9 @@ class SinkhornDistance(object):
         if not self.ot:
             n = len(self.x)
             m = len(self.y)
-            D = SquaredEuclidean(tonumpy(self.x).reshape(n, -1),
+            D = squared_euclidean_cost(tonumpy(self.x).reshape(n, -1),
                                  tonumpy(self.y).reshape(m, -1))
-            return D.compute()
+            return D#.compute()
         # if self.dirac:
         #     self.x = self.x.reshape(m, -1)
         #     self.y = self.y.reshape(n, -1)

@@ -1,6 +1,13 @@
 Spatio-temporal Alignement
 --------------------------
 
+Fork from https://github.com/hichamjanati/spatio-temporal-alignements
+
+Soft-dtw from (https://github.com/mblondel/soft-dtw/tree/master/sdtw) can not easily be installed since it requires a C compilation. 
+
+A new implementation of soft-dtw by [mblondel] (https://github.com/google-research/soft-dtw-divergences) exists. The new implemenation is based on numba. 
+
+
 Guide to reproduce the results of the paper
 "Spatio-temporal alignements: Optimal transort through space and time"
 (https://arxiv.org/abs/1910.03860).
@@ -24,7 +31,7 @@ necessary dependencies (available through pip or conda):
 - joblib
 - matplotlib
 - scikit-learn
-- soft-dtw (https://github.com/mblondel/soft-dtw/tree/master/sdtw)
+- soft-dtw-divergences (https://github.com/google-research/soft-dtw-divergences)
 - torch
 - pandas
 - numba

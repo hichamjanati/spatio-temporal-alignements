@@ -1,7 +1,9 @@
 import numpy as np
 import torch
-from sdtw import SoftDTW
-from sdtw.distance import SquaredEuclidean
+#from sdtw import SoftDTW
+#from sdtw.distance import SquaredEuclidean
+from sdtw_div.numba_ops import squared_euclidean_cost, sdtw_value_and_grad_C, sdtw_C
+
 from .distance import SinkhornDistance
 from .utils import tonumpy
 
@@ -76,15 +78,22 @@ def sta_distances(x, y, metric, beta=0.01, epsilon=0.01,
     for k, beta in enumerate(betas):
         for i in range(n_time_series):
             if beta:
-                sdtw = SoftDTW(cost_matrices[:, i], gamma=beta)
-                sta_values[k, i] = sdtw.compute()
+                #sdtw = SoftDTW(cost_matrices[:, i], gamma=beta)
+                #sta_values[k, i] = sdtw.compute() # returns scalar
                 if return_grad:
-                    E = sdtw.grad()[:, :, None]
-                    if data_is_img:
-                        E = E[:, :, :, None]
+                    #E = sdtw.grad()[:, :, None]
+                    sta_values[k,i],E = sdtw_value_and_grad_C(cost_matrices[:, i], gamma=beta)
+                else:
+                    sta_values[k, i] = sdtw_C(cost_matrices[:,i], gamma=beta, return_all=False)
+                
+                # not sure if this is a potential bug:
+                # if return_grad is False, then E does not exist (or am I missing something?)  
+                if data_is_img:
+                    E = E[:, :, :, None]
                     gradient[k, :, i] = (w_gradients[:, i] * E).sum(axis=1)
             else:
                 sta_values[k, i] = dtw(cost_matrices[:, i])
+
     if len(betas) == 1:
         sta_values = sta_values[0]
         gradient = gradient[0]
@@ -147,11 +156,13 @@ def compute_sdtw(x, y, beta, i):
     """Computes soft-dtw in parallel between a pair of time series x and y."""
     x = x.reshape(len(x), -1)
     y = y.reshape(len(y), -1)
-    D = SquaredEuclidean(x, y)
+    #D = SquaredEuclidean(x, y)
+    D = squared_euclidean_cost(x,y)
     if beta:
-        o = SoftDTW(D, gamma=beta).compute()
+        #o = SoftDTW(D, gamma=beta).compute()
+        o = sdtw_C(D, gamma=beta, return_all=False)
     else:
-        D = D.compute()
+        #D = D.compute()
         o = dtw(D)
     print("Softdtw out of %s" % i)
     return o
