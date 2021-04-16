@@ -1,9 +1,11 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from sdtw import SoftDTW
-from sdtw.distance import SquaredEuclidean
+#from sdtw import SoftDTW
+#from sdtw.distance import SquaredEuclidean
+from sdtw_div.numba_ops import sdtw
+
 from joblib import delayed, Parallel
-from shift_figure import gaussian_mixture
+from plot_example import gaussian_mixture
 
 
 rc = {"legend.fontsize": 15,
@@ -28,8 +30,13 @@ def gauss(size, mean, std, mass):
 def compute_sdtw(signal, beta, T, k, start, end):
     x = signal[start: end]
     y = signal[start + k: end + k]
-    D = SquaredEuclidean(x, y)
-    o = SoftDTW(D, gamma=beta).compute()
+    #D = SquaredEuclidean(x, y)
+    #o = SoftDTW(D, gamma=beta).compute()
+    # alternative:
+    # D = squared_euclidean_cost(x, y)
+    # o = sdtw_C(D)
+    
+    o = sdtw(x,y)
     print("Out of %s" % k)
     return o
 
